@@ -1,0 +1,7 @@
+/.project
+/.pydevproject
+/org/__init__.pyc
+/org/dhis/randomizer/HttpRequestor.pyc
+/org/dhis/randomizer/Program.pyc
+/org/dhis/randomizer/Settings.pyc
+
