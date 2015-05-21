@@ -3,6 +3,7 @@ import json
 from datetime import datetime
 import random
 import os.path
+import decimal
 
 global settingHandler
 global dhishttpReq
@@ -71,11 +72,10 @@ class Program:
         if settingProgram:
             numberOfEvents = settingProgram["numberOfEvents"]
         events = []
-        for index in range(0,numberOfEvents):
+        for index in range(0,40):
             user = settingHandler.getUser()
             eventDate = self.randomizeDate("1-1-2011","28-12-2015")
             gender = None
-            #print "Event Date:" + eventDate
             event = {
                      "program" : self.data["id"],
                      "eventDate" :eventDate,
@@ -84,12 +84,19 @@ class Program:
                      "storedBy": "admin",
                      "dataValues":[]
                      }
+            if settingProgram:
+                if "hasCoordinates" in settingProgram:
+                    
+                    coordinates = settingHandler.getCoordinates()
+                    event["coordinate"] = {}
+                    event["coordinate"]["latitude"] = str(self.randomizeCoordinates(coordinates["latitude"]["from"],coordinates["latitude"]["to"]))
+                    event["coordinate"]["longitude"] = str(self.randomizeCoordinates(coordinates["longitude"]["from"],coordinates["longitude"]["to"]))
             for dataElement in self.data["programStages"][0]["programStageDataElements"]:
                 settingDataElement = settingHandler.getDataElement(dataElement["dataElement"]["name"])
                 value = None
                 if settingDataElement:
                     if "file" in settingDataElement:
-                        with open(settingDataElement["file"],) as json_data:
+                        with open(settingHandler.getBaseDirectory()+ "files/" + settingDataElement["file"],) as json_data:
                             data = json.load(json_data)
                             randomRow = self.randomizeInteger(0, len(data) - 1)
                             value = data[randomRow]
@@ -130,8 +137,8 @@ class Program:
                 event["dataValues"].append({"dataElement":dataElement["dataElement"]["id"],"value":value})
             events.append(event)
         sendEvents = {"events" :events}
-        print json.dumps(events)
-        #resp, content = dhishttpReq.post("events.json",str(json.dumps(sendEvents)))
+        #print json.dumps(events)
+        resp, content = dhishttpReq.post("events.json",str(json.dumps(sendEvents)))
         return events
     def randomizeDataElement(self,dataElement):
         if dataElement["dataElement"]["type"] == "date":
@@ -170,6 +177,16 @@ class Program:
             return 0
         else:
             return random.randrange(start,end)
+    def randomizeCoordinates(self,start, end):
+        isNegative = False
+        if(start < 0 and end < 0):
+            start = -1 * start
+            end = -1 * end
+            isNegative = True
+        if isNegative:
+            return -1 * decimal.Decimal('%d.%d' % (random.randint(0,start),random.randint(0,end)))
+        else:
+            return decimal.Decimal('%d.%d' % (random.randint(0,start),random.randint(0,end)))
     def getProgramEvents(self,programName):
         program = programHandler.getProgram(programName.replace("_"," "))
         

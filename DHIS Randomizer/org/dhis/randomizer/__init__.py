@@ -37,7 +37,7 @@ import json
 import HttpRequestor
 
 
-settingHandler = Settings.SettingHandler('E:/randomizer2/')
+settingHandler = Settings.SettingHandler('E:/randomizer/')
 dhishttpReq = HttpRequestor.HttpRequestor(settingHandler.getDHISUrl(),
                                           settingHandler.getDHISUserName(),
                                           settingHandler.getDHISUserPassword());

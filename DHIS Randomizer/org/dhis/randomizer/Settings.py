@@ -36,6 +36,8 @@ class SettingHandler:
         for dataElement in self.dataElements:
             if dataElement["name"] == name:
                 return dataElement
+    def getCoordinates(self):
+        return self.settings["coordinates"]
     def setUser(self,json):
         self.user = json
     def getUser(self):
