@@ -47,13 +47,10 @@ class ProgramHandler:
     def getProgramDependencies(self):
         return self.programDependencies
     def areDependeciesResolved(self,dependencyProgram):
-        #print json.dumps(dependencyProgram)
         for dependency in dependencyProgram["dependencies"]:
             for programDependency in self.programDependencies:
                 if dependency == programDependency["name"]:
-                    #print "False"
                     return False
-        #print "True"
         return True
     def getProgram(self,name):
         for program in self.programs:
@@ -72,7 +69,7 @@ class Program:
         if settingProgram:
             numberOfEvents = settingProgram["numberOfEvents"]
         events = []
-        for index in range(0,40):
+        for index in range(0,numberOfEvents):
             user = settingHandler.getUser()
             eventDate = self.randomizeDate("1-1-2011","28-12-2015")
             gender = None
@@ -91,6 +88,7 @@ class Program:
                     event["coordinate"] = {}
                     event["coordinate"]["latitude"] = str(self.randomizeCoordinates(coordinates["latitude"]["from"],coordinates["latitude"]["to"]))
                     event["coordinate"]["longitude"] = str(self.randomizeCoordinates(coordinates["longitude"]["from"],coordinates["longitude"]["to"]))
+                    print event["coordinate"]["latitude"] +":"+event["coordinate"]["longitude"]
             for dataElement in self.data["programStages"][0]["programStageDataElements"]:
                 settingDataElement = settingHandler.getDataElement(dataElement["dataElement"]["name"])
                 value = None
@@ -137,7 +135,6 @@ class Program:
                 event["dataValues"].append({"dataElement":dataElement["dataElement"]["id"],"value":value})
             events.append(event)
         sendEvents = {"events" :events}
-        #print json.dumps(events)
         resp, content = dhishttpReq.post("events.json",str(json.dumps(sendEvents)))
         return events
     def randomizeDataElement(self,dataElement):
@@ -168,7 +165,6 @@ class Program:
          
         month = random.randint(1, 12)
         day = random.randint(1, 28)
-        #print "Month1 :" +str(month)
         return datetime(year, month, day).strftime('%Y-%m-%d') #yyyy-MM-dd
     def randomizeInteger(self,start, end):
         if start == end:
@@ -184,9 +180,9 @@ class Program:
             end = -1 * end
             isNegative = True
         if isNegative:
-            return -1 * decimal.Decimal('%d.%d' % (random.randint(0,start),random.randint(0,end)))
+            return -1 * decimal.Decimal('%d.%d' % (random.randint(start,end),random.randint(0,9999)))
         else:
-            return decimal.Decimal('%d.%d' % (random.randint(0,start),random.randint(0,end)))
+            return decimal.Decimal('%d.%d' % (random.randint(start,end),random.randint(0,9999)))
     def getProgramEvents(self,programName):
         program = programHandler.getProgram(programName.replace("_"," "))
         

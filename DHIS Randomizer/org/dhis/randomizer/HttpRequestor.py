@@ -12,7 +12,6 @@ class HttpRequestor:
     def delete(self,url):
         return self.request(url,"DELETE")
     def post(self,url,data):
-        print data
         return self.request(url,"POST",data)
     def request(self,url,method,data = None):
         return self.http.request(self.dhisAPIUrl + "api/"+ url,

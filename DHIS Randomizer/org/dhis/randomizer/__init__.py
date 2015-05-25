@@ -46,7 +46,6 @@ dhishttpReq = HttpRequestor.HttpRequestor(settingHandler.getDHISUrl(),
 # while True:
 #     resp, content = dhishttpReq.get("events.json")
 #     eventsFromServer = json.loads(content)
-#     print json.dumps(eventsFromServer)
 #     for event in eventsFromServer["events"]:
 #         resp, content = dhishttpReq.delete("events/" +event["event"])
 
