@@ -38,10 +38,10 @@ class SettingHandler:
                 return dataElement
     def getCoordinates(self):
         return self.settings["coordinates"]
-    def setUser(self,json):
-        self.user = json
-    def getUser(self):
-        return self.user
+    def setOrganisationUnits(self,json):
+        self.organisationUnits = json
+    def getOrganisationUnits(self):
+        return self.organisationUnits
     def getStrings(self):
         return self.strings
     def getNames(self):

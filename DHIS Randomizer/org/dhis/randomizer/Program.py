@@ -19,8 +19,8 @@ class ProgramHandler:
         dhishttpReq = HttpRequestor.HttpRequestor(settingHandler.getDHISUrl(),settingHandler.getDHISUserName(),settingHandler.getDHISUserPassword());
         resp, content = dhishttpReq.get("programs?filters=type:eq:3&paging=false&fields=id,name,version,programStages[id,version,programStageSections[id],programStageDataElements[sortOrder,dataElement[id,name,code,type,optionSet[id,name,options[id,name],version]]]]")
         js = json.loads(content)
-        resp, content = dhishttpReq.get("me")
-        settingHandler.setUser(json.loads(content))
+        resp, content = dhishttpReq.get("organisationUnits")
+        settingHandler.setOrganisationUnits(json.loads(content))
         self.programs = []
         self.programDependencies = []
         for p in js["programs"]:
@@ -69,14 +69,17 @@ class Program:
         if settingProgram:
             numberOfEvents = settingProgram["numberOfEvents"]
         events = []
+        organisationUnits = settingHandler.getOrganisationUnits()
+        print json.dumps(organisationUnits)
+                                                                
         for index in range(0,numberOfEvents):
-            user = settingHandler.getUser()
+            
             eventDate = self.randomizeDate("1-1-2011","28-12-2015")
             gender = None
             event = {
                      "program" : self.data["id"],
                      "eventDate" :eventDate,
-                     "orgUnit": user["organisationUnits"][self.randomizeInteger(0,len(user["organisationUnits"]) - 1)]["id"],
+                     "orgUnit": organisationUnits["organisationUnits"][self.randomizeInteger(0,len(organisationUnits["organisationUnits"]) - 1)]["id"],
                      "status": "COMPLETED",
                      "storedBy": "admin",
                      "dataValues":[]
